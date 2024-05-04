@@ -8,7 +8,7 @@ const searchTest = async () => {
     await driver.get('https://music.yandex.by/home');
     const closeButtonSelector = By.xpath('//*[@class="pay-promo-close-btn js-close"]');
     const searchButtonSelector = By.xpath('//*[@class="d-search__button__container"]/button');
-    const searchInputSelector = By.xpath('//input[@class="d-input__field deco-input d-input__field_size-S deco-input_suggest"]');
+    const searchInputSelector = By.xpath('//*[@class="d-input__field deco-input d-input__field_size-S deco-input_suggest"]');
 
     const closeButton = await driver.findElement(closeButtonSelector);
     closeButton.click();
@@ -18,9 +18,15 @@ const searchTest = async () => {
     const searchInput = await driver.findElement(searchInputSelector);
     const productName = "Woodbine Winhand";
     await searchInput.sendKeys(productName);
+    await searchInput.sendKeys(Key.ENTER);
 
+    const tracks = await driver.findElements(By.className('d-track__title deco-link deco-link_stronger'));
 
-    return true;
+    for(let t = 0; t < tracks.length; t++) {
+      let name = await tracks[t].getText();
+      return name === 'Woodbine';
+    }
+    return false;
   } catch (err) {
     console.log(err)
     return false;
